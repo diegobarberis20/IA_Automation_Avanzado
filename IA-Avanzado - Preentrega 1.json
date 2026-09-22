@@ -1,0 +1,274 @@
+{
+  "name": "IA-Avanzado - Preentrega 1",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "[ROL Y ÁMBITO]\nSos un Agente de conversacional para una empresa de electrodomésticos. Tu único ámbito es interpretar mensajes desestructurados de usuarios, identificar su solicitud, clasificar si es por venta, garantía, cliente VIP o postventa y registrar un ticket limpio para que el equipo interno pueda actuar.\n\nNO tenés autorización para: prometer tiempos de resolución, cerrar tickets, otorgar compensaciones, modificar datos productivos, borrar registros, ejecutar acciones destructivas, brindar asesoramiento legal o comprometer decisiones comerciales.\n\n[OBJETIVO OPERATIVO]\nConvertir cada consulta entrante en un registro estructurado con: idticket (numero autoincremental), nombre del usuario, contacto, categoría del pedido, prioridad y resumen del caso.\n\n\n[REGLAS DE USO DE HERRAMIENTAS]\n\nUsá la herramienta \"Registrar_Ticket\" SOLO cuando tengas datos mínimos suficientes: nombre de usuario, contacto del usuario, categoría del pedido y descripción del pedido.\nSi falta un dato clave, hacé una única pregunta clara antes de registrar.\nNo inventes información. Si un dato no fue provisto, dejalo vacío o marcá \"No informado\".\nClasifica la prioridad como Alta, Media o Baja. Alta aplica si hay problemas de garantía, impacto en facturación en post venta o cliente estratégico.\n\n\n[PROTOCOLO DE ESCALAMIENTO / GUARDRAILS]\n\nSi el usuario reporta problemas de garantía, problemas de facturación o cliente VIP, marcá prioridad Alta y recomendá revisión humana inmediata.\nSi el usuario pide una acción destructiva o sensible, detené el ciclo y respondé: \"El caso requiere revisión humana antes de ejecutar acciones sensibles.\"\nNo envíes correos ni mensajes externos al cliente final. Solo registrá el ticket y generá un resumen operativo.\n\n[ESTILO]\n\nEscribí en español rioplatense estándar, claro y profesional.\nNo uses lenguaje inclusivo con terminaciones en -e, -x o @.\nSé breve, específico y orientado a la operación.\n",
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "94c99cbd-764f-4e04-879f-9e5ed5f8676c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Esta herramienta registra tickets de solicitudes de clientes en Google Sheets.\nUSA esta herramienta cuando el usuario haya proporcionado como mínimo:\nun medio de contacto;\nun problema que pueda ser categorizado;\nuna descripción suficiente del inconveniente.\nAntes de ejecutar la herramienta:\nIdentificá el problema principal reportado por el usuario.\nDeterminá la categoría del problema.\nClasificá la prioridad como Alta, Media o Baja.\nGenerá un resumen breve y operativo del incidente.\nREGLAS DE PRIORIDAD:\nALTA: Problemas en facturación, problemas de garantia, pérdida de datos, incidente de seguridad o cliente estratégico.\nMEDIA: por ventas.\nBAJA: consulta general, problema menor o solicitud sin impacto inmediato n.\nCuando estén disponibles los datos mínimos, ejecutá esta herramienta exactamente UNA vez.\nNo inventes información faltante. Si el nombre o la empresa no fueron informados, utilizá \"No Informado\".\nSi el mensaje contiene varios problemas, registrá como problema principal el de mayor impacto e incluí los demás en el resumen.\nNo uses esta herramienta para consultas comerciales, legales o administrativas que estén fuera del ámbito de soporte técnico\n",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1M3ohmLWyuCpzVaWjJ0-BP-8GQV30NwJ2AHYTXu60Y1Y",
+          "mode": "list",
+          "cachedResultName": "Registrar_tickets",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1M3ohmLWyuCpzVaWjJ0-BP-8GQV30NwJ2AHYTXu60Y1Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1M3ohmLWyuCpzVaWjJ0-BP-8GQV30NwJ2AHYTXu60Y1Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Contacto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contacto', ``, 'string') }}",
+            "Usuario": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Usuario', ``, 'string') }}",
+            "Resumen": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Resumen', ``, 'string') }}",
+            "idTicket": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('idTicket', ``, 'string') }}",
+            "Categoria del pedido": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Categoria_del_pedido', ``, 'string') }}",
+            "Prioridad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prioridad', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "idTicket",
+              "displayName": "idTicket",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Usuario",
+              "displayName": "Usuario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Contacto",
+              "displayName": "Contacto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Categoria del pedido",
+              "displayName": "Categoria del pedido",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Prioridad",
+              "displayName": "Prioridad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Resumen",
+              "displayName": "Resumen",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        432,
+        224
+      ],
+      "id": "c1d0e4af-d9d8-4267-9c5f-f9ea710f5cb5",
+      "name": "Append row in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "yFzDu0eQjtkKINzz",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0BRDPZ95EY",
+          "mode": "list",
+          "cachedResultName": "celularesmania"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        592,
+        0
+      ],
+      "id": "600e4575-7d61-401f-9489-0f038e811385",
+      "name": "Send a message",
+      "webhookId": "083c31d8-1995-4667-af9b-ec04f6bb4bf2",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "AZ9B0HjnG41UnR6c",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        16,
+        0
+      ],
+      "id": "f1689cd5-81ad-4b9f-9cae-407f1fd846cb",
+      "name": "Telegram Trigger",
+      "webhookId": "669578f9-a8aa-46b3-bcce-1c4b279f6a2e",
+      "credentials": {
+        "telegramApi": {
+          "id": "X89FEm0RMYVqG7cZ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        96,
+        208
+      ],
+      "id": "832785f4-deb9-4a74-8ca0-70057f3f3947",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Append row in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "47dc101b-f93c-4c62-9b4f-14e9a9304a5d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4bf732ec718edf8b56e27ee6251727f0a190b783cc11a865fe7b9e1c0dc6640b"
+  },
+  "nodeGroups": [],
+  "id": "cB9FMQjHjKEEVzQA",
+  "tags": []
+}
